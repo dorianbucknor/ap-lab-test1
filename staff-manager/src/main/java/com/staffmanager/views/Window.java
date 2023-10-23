@@ -1,20 +1,14 @@
 package com.staffmanager.views;
 
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Insets;
+import java.awt.*;
+import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
+import java.util.*;
+import javax.swing.*;
 
-import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JTextField;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import com.staffmanager.models.Employee;
 import com.staffmanager.services.EmployeeCRUDService;
@@ -32,6 +26,8 @@ public class Window extends JFrame {
     private Employee employee;
     private EmployeeCRUDService crudService;
 
+    private final Logger logger = LogManager.getLogger(Window.class);
+
     // private JPanel buttonPanel, formPanel, container;
 
     public Window() {
@@ -47,7 +43,7 @@ public class Window extends JFrame {
         try {
             crudService = new EmployeeCRUDService();
         } catch (SQLException e) {
-           logger.fatal("Can't connect to database! " + e.getMessage());
+            logger.fatal("Can't connect to database! " + e.getMessage());
             e.printStackTrace();
         }
 
@@ -84,7 +80,7 @@ public class Window extends JFrame {
 
         nameLbl = new JLabel("Name:");
         nameLbl.setVisible(true);
-        
+
         salaryLbl = new JLabel("Salary:");
         salaryLbl.setVisible(true);
 
@@ -95,7 +91,7 @@ public class Window extends JFrame {
 
     private void addComponentsToFrame() {
         GridBagConstraints constraints = new GridBagConstraints();
-        Insets insets = new Insets(0,0,0,0);
+        Insets insets = new Insets(0, 0, 0, 0);
 
         constraints.gridy = 0;
         this.add(label1, constraints);
@@ -150,10 +146,12 @@ public class Window extends JFrame {
 
     private void addListeners() {
         id.addActionListener(new ActionListener() {
-              @Override
+
+            @Override
             public void actionPerformed(ActionEvent a) {
                 employee.setId(id.getText().trim());
             }
+
         });
 
         name.addActionListener(new ActionListener() {
@@ -171,7 +169,7 @@ public class Window extends JFrame {
                     employee.setSalary(value);
                 } catch (Exception e) {
                     employee.setSalary(0.0);
-                    new JOptionPane("Error setting salary. Invalid Number!", JOptionPane.ERROR_MESSAGE);                                    
+                    new JOptionPane("Error setting salary. Invalid Number!", JOptionPane.ERROR_MESSAGE);
                 }
 
             }
@@ -215,7 +213,7 @@ public class Window extends JFrame {
 
         load.addActionListener(new ActionListener() {
             @Override
-            public void actionPerformed(Action a) {
+            public void actionPerformed(ActionEvent a) {
                 try {
                     employee = crudService.read(employee.getId());
                 } catch (Exception e) {
@@ -227,7 +225,7 @@ public class Window extends JFrame {
 
         delete.addActionListener(new ActionListener() {
             @Override
-            public void actionPerformed(Action a) {
+            public void actionPerformed(ActionEvent a) {
                 try {
                     crudService.delete(employee.getId());
                 } catch (Exception e) {
@@ -238,7 +236,7 @@ public class Window extends JFrame {
         });
     }
 
-    private void setProperties(){
+    private void setProperties() {
         this.setSize(800, 600);
         this.setLocationRelativeTo(null);
         this.pack();
